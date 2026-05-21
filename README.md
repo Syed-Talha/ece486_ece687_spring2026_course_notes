@@ -70,6 +70,7 @@ For expansive mathematical expressions (such as complex manipulator inertia tens
 If you prefer to preview your work locally before pushing to GitHub, you will need a LaTeX distribution installed on your machine:
 * **Windows**: Install [MiKTeX](https://miktex.org).
 * **macOS**: Install [MacTeX](https://tug.org).
-* **Linux**: Run `sudo apt install texlive-latex-extra texlive-science latexmk`.
+* **Ubuntu/Debian**: Run `sudo apt install texlive-latex-extra texlive-science latexmk`.
+* **ArchLinux**: Run `sudo pacman -Syu texlive-latexextra texlive-mathscience texlive-binextra`.
 
 To compile, navigate to your file directory via terminal and run: `latexmk -pdf lecture-XX.tex`.
