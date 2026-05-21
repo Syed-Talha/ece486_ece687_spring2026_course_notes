@@ -5,7 +5,6 @@
 \section{Lecture 2 (Thu, May 14)}
 \marginnote{\textbf{Scribe:} Oliver Tattersall \& Owen Waldron \\ \textbf{Date:} Thu, May 14, 2026}
 
-\section{Manipulators}
 \subsection{Serial Manipulators}
 
 \smallcaps{Serial Manipulators} are kinematic chains of rigid bodies (links) connected by joints.
@@ -14,13 +13,13 @@ Rigid Bodies are non-deformable.
 The joints can be connected in two ways, \smallcaps{Revolute} and \smallcaps{Prismatic}. They both have only 1 degree of freedom. Revolute is a rotation around one access like a hinge. Prismatic is a piston, the links push out in translation like a pen ejecting. 
 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{joint_type.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/joint_type.jpg}
 \end{center}
 
 A simple manipulator that uses Revolute joints is the \smallcaps{RR Planar Manipulator}. This has 2 revolute joints and two links, as shown below:
 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{rr_planar.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/rr_planar.jpg}
 \end{center}
 
 A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian Manipulator}. This has 3 prismatic joints that move along each axis, as shown below. A real world example is a 3D printer, where the location of the nozzle is controlled by 3 prismatic joints to allow placement anywhere in the 3D space.
@@ -28,11 +27,11 @@ A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian M
 \begin{center}
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{3d_cart.jpg}
+\includegraphics[width=\linewidth]{lecture-2-images/3d_cart.jpg}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{3d_cart_model.png}
+\includegraphics[width=\linewidth]{lecture-2-images/3d_cart_model.png}
 \end{minipage}
 \end{center}
 
@@ -40,7 +39,7 @@ A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian M
 
 When we think about joints like the wrist, we can think of them as a composition of 3 back to back revolute joints instead of the more complex spherical joint. This way we can define and recreate its motion much more easily. 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{wrist.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/wrist.jpg}
 \end{center}
 
 \smallcaps{SCARA(Selective compliance Assembly Robot Arm)}
@@ -49,11 +48,11 @@ From base it has a revolute joint vertically(like your hips rotating), then a re
 \begin{center}
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{SCARA.jpg}
+\includegraphics[width=\linewidth]{lecture-2-images/SCARA.jpg}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{scara_model.png}
+\includegraphics[width=\linewidth]{lecture-2-images/scara_model.png}
 \end{minipage}
 \end{center}
 
@@ -61,7 +60,7 @@ This is called selective compliant because you can move it in easily in the x-y 
 \textbf{Note: }There will be a question on selective compliance in either the homework or final.
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{6dof_model.png}
+\includegraphics[width=0.5\textwidth]{lecture-2-images/6dof_model.png}
 \end{center}
 \marginnote{This is an example of a 6-DOF Manipulator}
 
@@ -82,14 +81,14 @@ Links and joints that don't necessarily affect one another, but can work togethe
 As such, they tend to be very fast and strong, as they have fewer long chains of joints which are brittle. 
 
 \begin{center}
-\includegraphics[width=0.4\textwidth]{pancake.png}
+\includegraphics[width=0.4\textwidth]{lecture-2-images/pancake.png}
 \end{center}
 
 The \smallcaps{Stewart Platform} has 6 pillars balancing a platform and changing its elevation.
 The 6 parallel pillars allow moving very heavy objects very easily, while trying to do so with a high DOF serial manipulator would require exceptional amounts of torque. However, the range of motions of this can be seriously limited in comparison with serial manipulators. 
 
 \begin{center}
-\includegraphics[width=0.5\textwidth]{stewart.png}
+\includegraphics[width=0.5\textwidth]{lecture-2-images/stewart.png}
 \end{center}
 
 We will largely use serial manipulators in this course. 
