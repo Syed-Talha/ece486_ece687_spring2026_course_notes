@@ -13,13 +13,13 @@ Rigid Bodies are non-deformable.
 The joints can be connected in two ways, \smallcaps{Revolute} and \smallcaps{Prismatic}. They both have only 1 degree of freedom. Revolute is a rotation around one access like a hinge. Prismatic is a piston, the links push out in translation like a pen ejecting. 
 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{lecture-2-images/joint_type.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/joint_type.png}
 \end{center}
 
 A simple manipulator that uses Revolute joints is the \smallcaps{RR Planar Manipulator}. This has 2 revolute joints and two links, as shown below:
 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{lecture-2-images/rr_planar.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/rr_planar.png}
 \end{center}
 
 A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian Manipulator}. This has 3 prismatic joints that move along each axis, as shown below. A real world example is a 3D printer, where the location of the nozzle is controlled by 3 prismatic joints to allow placement anywhere in the 3D space.
@@ -27,7 +27,7 @@ A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian M
 \begin{center}
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{lecture-2-images/3d_cart.jpg}
+\includegraphics[width=\linewidth]{lecture-2-images/3d_cart.png}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
@@ -39,7 +39,7 @@ A simple manipulator that uses Prismatic joints is the \smallcaps{3D Cartesian M
 
 When we think about joints like the wrist, we can think of them as a composition of 3 back to back revolute joints instead of the more complex spherical joint. This way we can define and recreate its motion much more easily. 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{lecture-2-images/wrist.jpg}
+\includegraphics[width=0.7\textwidth]{lecture-2-images/wrist.png}
 \end{center}
 
 \smallcaps{SCARA(Selective compliance Assembly Robot Arm)}
@@ -48,7 +48,7 @@ From base it has a revolute joint vertically(like your hips rotating), then a re
 \begin{center}
 \begin{minipage}{0.48\textwidth}
 \centering
-\includegraphics[width=\linewidth]{lecture-2-images/SCARA.jpg}
+\includegraphics[width=\linewidth]{lecture-2-images/SCARA.png}
 \end{minipage}\hfill
 \begin{minipage}{0.48\textwidth}
 \centering
