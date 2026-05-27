@@ -1,8 +1,170 @@
 \documentclass[../../master-handout.tex]{subfiles}
 
 \begin{document}
-
 \section{Lecture 3 (Wed, May 20)}
-\sidenote{\textbf{Scribe:} [Student Name Here] \\ \textbf{Date:} Wed, May 20, 2026}
+\sidenote{\textbf{Scribe:} Shourrya Guha \\ \textbf{Date:} Wed, May 20, 2026}
+
+\subsection{Serial Manipulators and Configuration Space}
+A \textbf{Serial Manipulator} is defined as a series of links interconnected by joints. To understand the state of a manipulator, we look at its configuration:
+\begin{itemize}
+    \item \textbf{Configuration:} The complete specification of all the points of the manipulator.
+    \item \textbf{Configuration Space:} The set of all possible configurations.
+    \item \textbf{Degrees of Freedom (DOF):} A manipulator has $n$ DOF if its configuration can be specified by exactly $n$ independent numbers.
+\end{itemize}
+
+\textbf{Note:} Knowing the angles of all the joints of a manipulator is equivalent to knowing the full configuration of the manipulator. 
+
+The configuration is typically represented by a \textbf{Vector of Joint Angles} (Configuration Vector):\sidenote{Joint variables are the minimal coordinates used to parameterize the manipulator state.}
+Figure~\ref{fig:serial-config} summarizes the configuration vector visually.
+\begin{fullwidth}
+\[
+q = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \end{bmatrix} = \begin{bmatrix} \theta_1 \\ \theta_2 \\ \vdots \\ \theta_n \end{bmatrix}
+\]
+\end{fullwidth}
+
+\begin{marginfigure}
+\centering
+\includegraphics[width=\linewidth]{lectures/week-2/lecture-3-images/output.png}
+\caption{A serial manipulator configuration example.}
+\label{fig:serial-config}
+\end{marginfigure}
+
+\subsection{Workspace and Degrees of Freedom}
+Objects in 3D space inherently have 6 DOF:
+\begin{itemize}
+    \item 3 for position (translation)
+    \item 3 for orientation (rotation)
+\end{itemize}
+
+In contrast, a manipulator can have:
+\begin{itemize}
+    \item $< 6$ DOF (under-actuated for full spatial control)
+    \item $= 6$ DOF (fully actuated)
+    \item $> 6$ DOF (redundant manipulator)
+\end{itemize}
+
+\paragraph{Workspace Definitions:}
+The \textbf{Workspace} is the set of all points reachable by the End Effector (EE).\sidenote{This is a position-space description; orientation requirements may shrink the usable set further.}
+Figure~\ref{fig:workspace} shows the reachable region used in the discussion below.
+
+\begin{marginfigure}
+\centering
+\includegraphics[width=\linewidth]{lectures/week-2/lecture-3-images/workspace.png}
+\caption{Workspace illustration.}
+\label{fig:workspace}
+\end{marginfigure}
+
+\begin{itemize}
+    \item \textbf{Dexterous Workspace:} The set of all points reachable with \textit{any} orientation of the end effector.
+    \item \textbf{Reachable Workspace:} The set of all reachable points (where the EE might not be able to achieve every orientation). 
+\end{itemize}
+It follows that the Dexterous Workspace is a subset of the Reachable Workspace.
+
+\subsection{Direct (Forward) Kinematics}
+Forward kinematics involves calculating the position and orientation of the end effector relative to the base frame, given the joint parameters. 
+
+\textbf{Convention:} A superscript indicates the \textit{reference frame} (With Respect To), while a subscript indicates the frame being described.
+
+The position vector $p^0$ (point in frame $n$ expressed in frame 0) can be calculated as:\sidenote{The superscript and subscript encode the frame convention, so the expression stays unambiguous.}
+\begin{fullwidth}
+\[
+p^0 = R_n^0 p^n + d_n^0
+\]
+\end{fullwidth}
+Where $d_n^0$ is the displacement vector from frame 0 to frame $n$, and the rotation matrix $R_n^0$ is defined by its column vectors (the principal axes of frame $n$ expressed in frame 0):
+\begin{fullwidth}
+\[
+R_n^0 = \begin{bmatrix} | & | & | \\ x_n^0 & y_n^0 & z_n^0 \\ | & | & | \end{bmatrix} \in \mathbb{R}^{3 \times 3}
+\]
+\end{fullwidth}
+
+\paragraph{Example 1: Pure Translation and Rotation}
+Given the displacement vector $d_n^0$ (origin of frame $n$ with respect to 0) and a point vector $p^n$:
+Figure~\ref{fig:ex1} illustrates the frame transform used in this example.
+
+\begin{marginfigure}
+\centering
+\includegraphics[width=\linewidth]{lectures/week-2/lecture-3-images/ex1.png}
+\caption{Pure translation and rotation example.}
+\label{fig:ex1}
+\end{marginfigure}
+
+\begin{fullwidth}
+\[
+d_n^0 = O_n^0 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}, \quad p^n = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
+\]
+\end{fullwidth}
+And the rotation matrix $R_n^0$:
+\begin{fullwidth}
+\[
+R_n^0 = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\]
+\end{fullwidth}
+We calculate $p^0$ as follows:
+\begin{fullwidth}
+\[
+p^0 = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix} + \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
+= \begin{bmatrix} -1 \\ 1 \\ 0 \end{bmatrix} + \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 2 \\ 0 \end{bmatrix}
+\]
+\end{fullwidth}
+
+\paragraph{Example 2: Fundamental Rotations}
+Rotation about the Z-axis by angle $\theta$:
+Figure~\ref{fig:rotz} shows the reference frame for the $z$-axis rotation.
+
+\begin{marginfigure}
+\centering
+\includegraphics[width=\linewidth]{lectures/week-2/lecture-3-images/ex2.png}
+\caption{Rotation about the $z$-axis.}
+\label{fig:rotz}
+\end{marginfigure}
+
+
+\begin{fullwidth}
+\[
+R_{z,\theta} = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\]
+\end{fullwidth}
+Rotation about the Y-axis by angle $\theta$:
+Figure~\ref{fig:roty} shows the analogous $y$-axis rotation setup.
+
+\begin{marginfigure}
+\centering
+\includegraphics[width=\linewidth]{lectures/week-2/lecture-3-images/ex3.png}
+\caption{Rotation about the $y$-axis.}
+\label{fig:roty}
+\end{marginfigure}
+
+\begin{fullwidth}
+\[
+R_{y,\theta} = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}
+\]
+\end{fullwidth}
+
+\subsection{Homogeneous Transformations}
+To combine rotation and translation into a single matrix multiplication, we use homogeneous coordinates. The transformation can be written as:
+\begin{fullwidth}
+\[
+P^0 = H_n^0 P^n
+\]
+\[
+\begin{bmatrix} X_0 \\ 1 \end{bmatrix} = \begin{bmatrix} R & d \\ 0 & 1 \end{bmatrix} \begin{bmatrix} X_n \\ 1 \end{bmatrix}
+\]
+\end{fullwidth}
+Where $H \in SE(3)$, which is an element of the Special Euclidean motion group.
+
+\subsection{Properties of Rotation Matrices}
+A valid rotation matrix belongs to the Special Orthogonal Group, denoted as $R \in SO(3)$:
+\begin{fullwidth}
+\[
+R = \begin{bmatrix} | & | & | \\ x & y & z \\ | & | & | \end{bmatrix}
+\]
+\end{fullwidth}
+Key properties include:
+\begin{enumerate}
+    \item \textbf{Unit Norm:} The column vectors are unit vectors, so $||x|| = ||y|| = ||z|| = 1$.
+    \item \textbf{Orthogonality:} The column vectors are mutually orthogonal, meaning their dot products are zero: $x^T y = 0, \quad y^T z = 0, \quad z^T x = 0$.
+    \item \textbf{Determinant:} The determinant of a rotation matrix is strictly positive one: $\det(R) = +1$.
+\end{enumerate}
 
 \end{document}
