@@ -24,10 +24,12 @@ We can further break this down categorically into linear and angular velocity Ja
 \begin{align*}
     \xi = \begin{bmatrix} J_v(q) \\ J_\omega(q)\end{bmatrix} \dot{q} = \begin{bmatrix}\Sigma_{i=1}^nJ_{v_i}(q) \dot{q}_i \\ \Sigma_{i=1}^nJ_{\omega_i}(q) \dot{q}_i \end{bmatrix}
 \end{align*}
-For the incoming derivation, please refer to the diagram below for the relevant variables.
+For the incoming derivation, please refer to Figure 1 for the relevant variables.
 
-INSERT IMAGE HERE
-
+\begin{figure}
+  \includegraphics[width=0.7\linewidth]{Lec6_Fig1.png}
+  \caption{Abstract coordinate system for deriving the Geometric Jacobian}
+\end{figure}
 
 We begin with deriving an expression for $J_\omega(q)$. Consider joint $i$:
 \begin{itemize}
@@ -65,7 +67,13 @@ z_{i-1} \times (o_n^o - o_{i-1}^o), \ \ \ \ \text{if joint $i$ is revolute} \\
 Thus, we have derived expressions for both $J_{\omega}(q)$ and $J_v(q)$, and thus we have an expression for $J$.
 
 \subsection{Example: RR Planar Robot}
-Refer to the diagram below for the problem setup. We will define the Jacobian as:
+
+\begin{figure}
+  \includegraphics[width=0.7\linewidth]{Lec6_Fig2.png}
+  \caption{Coordinate frames and joint variables for the RR planar robot}
+\end{figure}
+
+Refer to Figure 2 for the problem setup. We will define the Jacobian as:
 \begin{align*}
     J = \begin{bmatrix}
     J_{v_1}(q) \ \ \ \ J_{v_2}(q) \\
