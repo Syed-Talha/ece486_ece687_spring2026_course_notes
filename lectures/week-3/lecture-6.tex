@@ -3,6 +3,145 @@
 \begin{document}
 
 \section{Lecture 6 (Thu, May 28)}
-\sidenote{\textbf{Scribe:} [Student Name Here] \\ \textbf{Date:} Thu, May 28, 2026}
+\sidenote{\textbf{Scribe:} [Talha Talha] \\ \textbf{Date:} Thu, May 28, 2026}
+
+\subsection{Recap}
+Recall a few important definitions from the previous lecture:
+\begin{itemize}
+    \item The \textbf{forward kinematic map} is given by $f: q \mapsto f(q)$, where $q$ is a robot configuration and $f(q)$ is the desired end effector pose.
+    \item The \textbf{inverse kinematics problem} asks that, given a desired end effector position $\bar{f}$, whether we can find a configuration $\bar{q}$ such that $f(\bar{q}) = \bar{f}$.
+    \item The \textbf{Geometric Jacobian} $J \in \mathbb{R}^{6\times n}$ maps joint velocities to end effector velocities. 
+\end{itemize}
+
+\subsection{Deriving the Geometric Jacobian}
+Begin with a vector of joint velocities $\xi = \begin{bmatrix} v_n^o \\ \omega_n^o \end{bmatrix}$, where $v_n^o$ and $\omega_n^o$ are the linear and angular velocities of the end effector with respect to the origin. By the definition of the Jacobian,
+
+\begin{align*}
+    \xi = J(q) \dot{q}
+\end{align*}
+
+We can further break this down categorically into linear and angular velocity Jacobians, and also express the velocities as sums of the columns of the Jacobian:
+\begin{align*}
+    \xi = \begin{bmatrix} J_v(q) \\ J_\omega(q)\end{bmatrix} \dot{q} = \begin{bmatrix}\Sigma_{i=1}^nJ_{v_i}(q) \dot{q}_i \\ \Sigma_{i=1}^nJ_{\omega_i}(q) \dot{q}_i \end{bmatrix}
+\end{align*}
+For the incoming derivation, please refer to the diagram below for the relevant variables.
+
+INSERT IMAGE HERE
+
+
+We begin with deriving an expression for $J_\omega(q)$. Consider joint $i$:
+\begin{itemize}
+    \item If joint $i$ is prismatic: $\omega_i^{i-1} = 0$ - there is no way a prismatic joint can induce relative rotation between two joints.
+    \item If joint $i$ is revolute, the axis it rotates on is $z_{i-1}$ because of how the DH convention works, and the rate is $\dot{\theta_i}$. Thus, $\omega_i^{i-1} = \dot{\theta_i} z_{i-1}$
+\end{itemize}
+We can express the angular velocity of the end effector with respect to the base as the sum of the individual angular velocities of each joint with respect to the previous one:
+\begin{align*}
+    \omega_n^0 = \Sigma_{i=1}^n \omega_i^{i-1} = [J_{\omega_1}(q) \ \dots \ J_{\omega_n}(q)] \dot{q}
+\end{align*}
+Where we define:
+\begin{align*}
+    J_{\omega_i}(q) = \left\{\begin{matrix}
+0, \ \ \ \ \text{if joint $i$ is prismatic} \\
+z_{i-1}, \ \ \ \ \text{if joint $i$ is revolute} \\ 
+\end{matrix}\right\}
+\end{align*}
+
+Now do the same, but for the linear velocity. We denote by $^iv_n^o$ the velocity of the end effector with respect to the base. Consider joint $i$:
+\begin{itemize}
+    \item If joint $i$ is prismatic: $^iv_n^0 = \dot{d_i} z_{i-1}$
+    \item If joint $i$ is revolute: $^iv_n^0 = \omega_i^{i-1} \times r_n^{i-1} = \dot{\theta_i} z_{i-1} \times (o_n^o - o_{i-1}^o)$
+\end{itemize}
+Again, we express linear velocity of the end effector with respect to the base as the sums of the individual linear velocities:
+\begin{align*}
+    v_n^0 = \Sigma_{i=1}^n v_i^{i-1} = [J_{v_1}(q) \ \dots \ J_{v_n}(q)] \dot{q}
+\end{align*}
+Where we define: 
+\begin{align*}
+J_{v}(q) = \left\{\begin{matrix}
+z_{i-1}, \ \ \ \ \text{if joint $i$ is prismatic} \\
+z_{i-1} \times (o_n^o - o_{i-1}^o), \ \ \ \ \text{if joint $i$ is revolute} \\ 
+\end{matrix}\right\}
+\end{align*}
+Thus, we have derived expressions for both $J_{\omega}(q)$ and $J_v(q)$, and thus we have an expression for $J$.
+
+\subsection{Example: RR Planar Robot}
+Refer to the diagram below for the problem setup. We will define the Jacobian as:
+\begin{align*}
+    J = \begin{bmatrix}
+    J_{v_1}(q) \ \ \ \ J_{v_2}(q) \\
+    J_{\omega_1}(q) \ \ \ \ J_{\omega_2}(q) \\
+    \end{bmatrix}
+\end{align*}
+NOTE: For shorthand, let:
+\begin{itemize}
+    \item $s_1 \equiv \sin(\theta_1)$
+    \item $c_1 \equiv \cos(\theta_1)$
+    \item $s_{12} \equiv \sin(\theta_1 + \theta_2)$
+    \item $c_{12} \equiv \cos(\theta_1 + \theta_2)$
+\end{itemize}
+Finally, define the following useful quantities:
+\begin{itemize}
+    \item $r_2^0 = o_2^o - o_o^o = \begin{bmatrix}
+        l_1c_1 + l_2c_{12} \\ l_1s_1 + l_2s_{12} \\ 0 
+    \end{bmatrix}$
+    \item $r_2^1 = o_2^o - o_2^1 = \begin{bmatrix}
+        l_2c_{12} \\l_2s_{12} \\ 0 
+    \end{bmatrix}$
+\end{itemize}
+
+First off, since the robot is planar, and the joints are revolute, then the angular velocity Jacobian values will naturally just be unit vectors in the z-directions:
+\begin{align*}
+    J_{\omega_1} = J_{\omega_2} = \begin{bmatrix}
+        0 \\ 0 \\ 1
+    \end{bmatrix}
+\end{align*}
+
+For the linear velocities, just follow the formula on the previous page:
+\begin{align*}
+    J_{v_1}(q) = z_0 \times r_2^0 = \begin{bmatrix}
+        -l_1s_1 - l_2s_{12} \\ l_1c_1 + l_2c_{12} \\ 0
+    \end{bmatrix}
+\end{align*}
+\begin{align*}
+    J_{v_2}(q) = z_0 \times r_2^1 = \begin{bmatrix}
+        - l_2s_{12} \\ l_2c_{12} \\ 0
+    \end{bmatrix}
+\end{align*}.
+
+Thus, our full Jacobian is given by:
+\begin{align*}
+    J = \begin{bmatrix}
+         -l_1s_1 - l_2s_{12} &  - l_2s_{12}\\ l_1c_1 + l_2c_{12} & l_2c_{12} \\ 0 & 0 \\ 0 & 0\\ 0 & 0 \\ 1 & 1
+    \end{bmatrix}
+\end{align*}
+Notice that there are several zeros. A zero in the Jacobian represents a direction in which joint $i$ (in column $i$) CANNOT induce a velocity in the end effector. For instance, joint 1 cannot induce a linear velocity in the z-direction, since the (3, 1) element is 0.
+
+Consider the case when $\theta_1 = \theta_2 = (0, 0)^T$. Here, our Jacobian is given by:
+\begin{align*}
+    J = \begin{bmatrix}
+         0 &  0\\ l_1 + l_2 & l_2 \\ 0 & 0 \\ 0 & 0\\ 0 & 0 \\ 1 & 1
+    \end{bmatrix}
+\end{align*}
+From the interpretation of the Jacobian, it appears that the only possible motion at that particular value of the joint variables is a linear motion in the y-direction. This should make sense, because this corresponds to the flat configuration of the robot. However, note that the second that there is even an infinitesimal change in the y-direction, the value of $J$ will change since it is a function of the joint angles, and so more directions will become available again. Note also that the change in $J$ corresponding to some infinitesimal $dq$ is highly nonlinear, which is what makes the inverse kinematics problem so difficult to solve in the first place.
+
+Next, consider the case of $q = (0, \pi)^T$. Here, our Jacobian is given by:
+\begin{align*}
+    J = \begin{bmatrix}
+         0 &  0\\ 0 & -l_2 \\ 0 & 0 \\ 0 & 0\\ 0 & 0 \\ 1 & 1
+    \end{bmatrix}
+\end{align*}
+Here, the first column is full of zeros for the linear velocity, meaning that joint 1 is stuck in place and cannot influence the end effector. However, joint 2 can do so.
+
+\subsection{Task Jacobian}
+The \textbf{Task Jacobian} is a "slice" of the Jacobian with only relevant rows - it relates the end effector linear/angular velocities required for a given task to the joint velocities $\dot{q}$.
+
+For example, given the earlier RR planar robot that wants to do a pick-and-place task in the plane it lives in, only the first two rows are relevant. Thus, our Task Jacobian is given by:
+\begin{align*}
+    J_T(q) = \begin{bmatrix}
+        -l_1s_{12} - l_2s_2 & -l_2s_2 \\ -l_1c_{12} + l_2c_2 & l_2c_2
+    \end{bmatrix}
+\end{align*}
+
+If $r < n$, where $r$ is the dimension of the task, then we say that the manipulator is \textbf{redundant} for the task and has $(n-r)$ redundant degrees of freedom.
 
 \end{document}
