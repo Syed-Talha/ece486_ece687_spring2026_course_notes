@@ -25,11 +25,40 @@ We can further break this down categorically into linear and angular velocity Ja
     \xi = \begin{bmatrix} J_v(q) \\ J_\omega(q)\end{bmatrix} \dot{q} = \begin{bmatrix}\Sigma_{i=1}^nJ_{v_i}(q) \dot{q}_i \\ \Sigma_{i=1}^nJ_{\omega_i}(q) \dot{q}_i \end{bmatrix}
 \end{align*}
 For the incoming derivation, please refer to Figure 1 for the relevant variables.
+% Code below modified from GenAI (with permission)
+\begin{figure}[htbp]
+    \centering
+    \tdplotsetmaincoords{60}{110} 
+    \begin{tikzpicture}[tdplot_main_coords, scale=1.5, >=stealth]
 
-\begin{figure}
-  \includegraphics[width=0.7\linewidth]{Lec6_Fig1.png}
-  \caption{Abstract coordinate system for deriving the Geometric Jacobian}
+        \coordinate (O1) at (0,0,0);
+        \draw[->, thick, red] (O1) -- (1,0,0) node[anchor=north east]{$x_0$};
+        \draw[->, thick, red] (O1) -- (0,1,0) node[anchor=north west]{$y_0$};
+        \draw[->, thick, red] (O1) -- (0,0,1) node[anchor=south]{$z_0$};
+        \node[fill=red!10, circle, inner sep=1pt] at (O1) {\small $O_0$};
+
+        \coordinate (O2) at (2,2,3);
+        \begin{scope}[shift={(O2)}]
+            \draw[->, thick, green!60!black] (0,0,0) -- (1,0.5,-0.2) node[anchor=north east]{$x_{i-1}$};
+            \draw[->, thick, green!60!black] (0,0,0) -- (-0.3,1,0.3) node[anchor=west]{$y_{i-1}$};
+            \draw[->, thick, green!60!black] (0,0,0) -- (0.3,-0.5,1.3) node[anchor=south]{$z_{i-1}$};
+            \node[fill=green!10, circle, inner sep=1pt] at (0,0,0) {\small $O_{i-1}$};
+        \end{scope}
+
+        \coordinate (O3) at (3.5,4,3);
+        \begin{scope}[shift={(O3)}]
+            \draw[->, thick, blue] (0,0,0) -- (1,0,-0.5) node[anchor=north west]{$x_n$};
+            \draw[->, thick, blue] (0,0,0) -- (1.1,1,-0.6) node[anchor=east]{$y_n$};
+            \draw[->, thick, blue] (0,0,0) -- (-0.3,1,0.3) node[anchor=south]{$z_n$};
+            \node[fill=blue!10, circle, inner sep=1pt] at (0,0,0) {\small $O_n$};
+        \end{scope}
+
+        \draw[->, dashed, gray, thick] (O2) -- (O3) node[midway, right] {$r_n^{i-1}$};
+    \end{tikzpicture}
+    \caption{Abstract coordinate system for deriving the Geometric Jacobian}
+    \label{fig:three_coordinate_frames}
 \end{figure}
+
 
 We begin with deriving an expression for $J_\omega(q)$. Consider joint $i$:
 \begin{itemize}
@@ -68,11 +97,55 @@ Thus, we have derived expressions for both $J_{\omega}(q)$ and $J_v(q)$, and thu
 
 \subsection{Example: RR Planar Robot}
 
+% Code below modified from GenAI (with permission)
 \begin{figure}
-  \includegraphics[width=0.7\linewidth]{Lec6_Fig2.png}
-  \caption{Coordinate frames and joint variables for the RR planar robot}
-\end{figure}
+\begin{tikzpicture}[
+    scale=1.5,
+    axis/.style={->,thick},
+    frame0/.style={color=red},
+    frame1/.style={color=blue},
+    frame2/.style={color=magenta}
+]
 
+    \def\thetaOne{40}
+    \def\thetaTwo{30}
+    
+    \def\lOne{2.2}
+    \def\lTwo{2.5}
+
+    \coordinate (O0) at (0,0);
+    \coordinate (O1) at (\thetaOne:\lOne);
+    \coordinate (O2) at ($(O1) + ({\thetaOne+\thetaTwo}:\lTwo)$);
+    
+    \coordinate (X1_ext) at ($(O1) + (\thetaOne:1.4)$); 
+
+    \draw[thick] (-0.4,-0.1) -- (0.4,-0.1);
+    \foreach \x in {-0.3,-0.2,-0.1,0,0.1,0.2,0.3}
+        \draw (\x,-0.1) -- (\x-0.1,-0.25);
+
+    \draw[ultra thick, black] (O0) -- (O1) -- (O2);
+    
+    \draw[black, fill=white, thick] (O0) circle (0.12) node[below left=3pt] {$O_0$};
+    \draw[black, fill=white, thick] (O1) circle (0.12) node[below right=3pt] {$O_1$};
+    \draw[black, fill=white, thick] (O2) circle (0.12) node[right=3pt] {$O_2$};
+    \draw[axis, frame0] (O0) -- (1.2,0) node[right] {$x_0$};
+    \draw[axis, frame0] (O0) -- (0,1.2) node[above] {$y_0$};
+    \draw[axis, frame1] (O1) -- ($(O1) + (\thetaOne:1.2)$) node[right] {$x_1$};
+    \draw[axis, frame1] (O1) -- ($(O1) + ({\thetaOne+90}:1.2)$) node[left] {$y_1$};
+
+    \draw[axis, frame2, line width=1.2pt] (O2) -- ($(O2) + ({\thetaOne+\thetaTwo}:1.0)$) node[right] {$x_2$};
+    \draw[axis, frame2, line width=1.2pt] (O2) -- ($(O2) + ({\thetaOne+\thetaTwo+90}:1.0)$) node[left] {$y_2$};
+    \path (O0) -- (O1) node[midway, above left, red] {$l_1$};
+    \path (O1) -- (O2) node[midway, left=4pt, blue] {$l_2$};
+    \draw[dashed, black!50, thin] (O1) -- (X1_ext);
+
+    \draw[->, red, thick] (0.5,0) arc (0:\thetaOne:0.5);
+    \node[red] at ({0.5*\thetaOne}:0.7) {$\theta_1$};
+    \draw[->, blue, thick] ($(O1) + (\thetaOne:0.5)$) arc (\thetaOne:{\thetaOne+\thetaTwo}:0.5);
+    \node[blue] at ($(O1) + ({\thetaOne+0.5*\thetaTwo}:0.7)$) {$\theta_2$};
+\end{tikzpicture}
+\caption{RR Planar Robot}
+\end{figure}
 Refer to Figure 2 for the problem setup. We will define the Jacobian as:
 \begin{align*}
     J = \begin{bmatrix}
